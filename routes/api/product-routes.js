@@ -27,10 +27,18 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   /* req.body should look like this...
     {
-      "product_name": "Basketball",
+      "product_name": "Cooler",
       "price": 200.00,
-      "stock": 3,
-      "tagIds": [1, 2, 3, 4]
+      "stock": 10,
+      "tagIds": [3, 4, 5, 6]
+    }
+
+    {
+      "tag_name": "As Seen on TV"
+    }
+
+    {
+      "category_name": "Jackets"
     }
   */
   try {
@@ -94,13 +102,20 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   // delete one product by its `id` value
-  const condition = `{
-    where: { id: ${req.params.id} }
-  }`
-  const result = modelOperation(Product, 'destroy', condition);
-  res.json(result);
+  try {
+    const deleteProduct = await Product.destroy({
+      where: { id: req.params.id }
+    });
+    if (deleteProduct) {
+      res.status(200).json({ Message: 'Product has been deleted' });
+    } else {
+      res.status(404).json({ Message: 'Product not found' });
+    }
+  } catch (err) {
+    res.status(500).json(err);
+  }
 });
 
 module.exports = router;

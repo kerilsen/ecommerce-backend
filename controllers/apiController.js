@@ -1,4 +1,5 @@
-// const errorCodes = require('./errorCodes');
+// I spent a lot of time trying to make this work to simplify the code, but gave up.
+// Leaving it here for posterity and future development
 
 const modelOperation = async (Model, operation, conditions) => {
     try {
