@@ -24,10 +24,10 @@
   1. At the root directory of the project, type 'npm init -y' 
   2. Type 'npm i' 
   3. Create a .env file in your root directory with 
-  DB_NAME='ecommerce_db'
-  DB_USER='root'
-  DB_PASSWORD=[YOUR PASSWORD]
-  PORT='3001'
+  * DB_NAME='ecommerce_db'
+  * DB_USER='root'
+  * DB_PASSWORD=[YOUR PASSWORD]
+  * PORT='3001'
   4. Type 'mysql -u root -p' and then enter your password for mysql 
   5. Type 'source db/schema.sql' 
   6. Type 'exit;' to get out of mysql 
