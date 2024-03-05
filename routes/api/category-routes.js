@@ -1,28 +1,65 @@
 const router = require('express').Router();
 const { Category, Product } = require('../../models');
+// const modelOperation = require('../../controllers/apiController.js');
 
-// The `/api/categories` endpoint
-
-router.get('/', (req, res) => {
-  // find all categories
-  // be sure to include its associated Products
+// Find all categories and include its associated Products
+router.get('/', async (req, res) => {
+  try {
+    const result = await Category.findAll({ include: [{ model: Product }] });
+    // const result = await modelOperation('Category', 'findAll', '{ include: [{ model: Product }] }');
+    res.json(result);
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+    res.status(500).json({ error: 'An error occurred while fetching all categories' })
+  }
 });
 
-router.get('/:id', (req, res) => {
-  // find one category by its `id` value
-  // be sure to include its associated Products
+// Find one category by its 'id' value including its associated Products
+router.get('/:id', async (req, res) => {
+  try {
+    const categoryId = req.params.id;
+    const result = await Category.findOne({ where: { id: categoryId }, include: [{ model: Product }] });
+    res.json(result);
+  } catch (err) {
+    res.status(500).json({ error: 'An error occurred while fetching this category' })
+  }
 });
 
-router.post('/', (req, res) => {
-  // create a new category
+router.post('/', async (req, res) => {
+  try {
+    const result = await Category.create(req.body);
+    console.log(result.toJSON());
+    // res.json(result);
+  } catch (error) {
+    res.status(500).json({ error: 'An error occurred while creating a new category' })
+  }
 });
 
-router.put('/:id', (req, res) => {
-  // update a category by its `id` value
-});
+// // Update a category by its 'id' value
+// router.put('/:id', (req, res) => {
+//   condition = { where: { id: req.params.id } };
+//   const result = modelOperation(Category, 'update', condition, req.body);
+//   res.json(result);
+// });
 
-router.delete('/:id', (req, res) => {
-  // delete a category by its `id` value
-});
+// router.delete('/:id', async (req, res) => {
+//   // delete a category by its `id` value
+//   const categoryId = req.params.id;
+//   try {
+//     const deleteCategory = await Category.destroy({
+//       where: {
+//         id: categoryId
+//       }
+//     });
+
+//     if (deleteCategory) {
+//       res.status(200).json({ Message: 'Category has been deleted' });
+//     } else {
+//       res.status(404).json({ Message: 'Category not found' });
+//     }
+//   } catch (err) {
+//     res.status(500).json(err);
+//   }
+// });
 
 module.exports = router;
