@@ -6,7 +6,7 @@ const routes = require('./routes');
 // Sync sequelize models to the database
 const syncDatabase = async () => {
   try {
-    await sequelize.sync({ force: true });
+    await sequelize.sync({ force: false });
     console.log('Database synced successfully');
     // then turn on the server
     startServer();
@@ -18,15 +18,18 @@ const syncDatabase = async () => {
 
 const startServer = () => {
   const app = express();
-  app.use('/', routes);
+
+  // middleware
   app.use(express.json());
-  // logger middleware
+  app.use(express.urlencoded({ extended: true }));
+  // logger
   app.use((req, res, next) => {
     req.time = new Date(Date.now()).toString();
     console.log(req.method, req.hostname, req.path, req.time);
     next();
   });
-
+  // turn on routes
+  app.use('/', routes);
   const PORT = process.env.PORT || 3001;
   app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
